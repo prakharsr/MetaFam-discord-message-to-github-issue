@@ -1,5 +1,0 @@
-module.exports = {
-    DISCORD_BOT_TOKEN : "",
-    GITHUB_PERSONAL_ACCESS_TOKEN : "",
-    GITHUB_REPO_OWNER_USERNAME : ""
-}
