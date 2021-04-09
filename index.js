@@ -23,7 +23,9 @@ client.on('message', msg => {
                 client.channels.fetch(msg.channel.id).then(channel => {
                     let parentMessageId = msg.reference.messageID;
                     channel.messages.fetch(parentMessageId).then(message => {
-                        githubIssueTitle = message.content;
+                        let parentIssueMessage = message.content;
+                        let githubIssueTitle = parentIssueMessage.split("|")[0].trim();
+                        let githubIssueBody = parentIssueMessage.split("|")[1].trim();
                         console.log(`The issue title to post to Github is : ${githubIssueTitle}`);
                         let repoName = msg.content.split("issuize to repo")[1].trim();
                         if(!repoName || repoName.length === 0 ) {
@@ -39,6 +41,7 @@ client.on('message', msg => {
                                     owner: repoOwner,
                                     repo: repoName,
                                     title: githubIssueTitle,
+                                    body: githubIssueBody
                                   }).then(() => {
                                     msg.reply('Github issue creation succeded !').catch(console.error);
                                   }).catch(err => console.error(err))
