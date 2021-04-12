@@ -1,9 +1,8 @@
 # Issues Bot
 
-For Gitcoin's hackathon https://gitcoin.co/issue/MetaFam/fix-the-world/2/100025495. I used discord's API to create a bot which will listen for messages on all the channels of a user and if any reply of the kind "issuize to repo X" to a message containing an issue is made, then it will check if the repo's name is correct according to github's naming conventions then it'll publish that issue to that repo and will reply to the user's message telling him that it has succeeded.
+For Gitcoin's hackathon https://gitcoin.co/issue/MetaFam/fix-the-world/2/100025495. I used discord's API to create a bot which will listen for messages on all the channels of a user and if any message of the kind "issuize to repo X | issue title | issue body", then it will check if the repo's name is correct according to github's naming conventions, capture the title and body and then it'll publish that issue to that repo and will reply to the user's message telling him that it has succeeded.
 
-Example format for issue message : `issue related to something (title) | content of the issue (body)`
-Example format for replying to issue : `issuize to repo MetaFam-discord-message-to-github-issue`
+Example format for issue message : `issuize to repo MetaFam-discord-message-to-github-issue | issue related to something (title) | content of the issue (body)`
 
 ![Working Example](./example.png?raw=true "Working Example")
 

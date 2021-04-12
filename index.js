@@ -13,51 +13,43 @@ client.on('ready', () => {
 client.on('message', msg => {
     try {
         if (msg.content.match(/issuize to repo(.*?)/g)) {
-            // check if the message is a reply
-            if(!msg.reference) {
-                // its not a reply, send a reply indicating failure 
-                msg.reply(`Github issue creation failed ! No parent message found ! Please reply to a message containing the issue to post the issue to Github`).catch(console.error);
+            if(msg.content.split("|").length < 3) {
+                msg.reply(`Github issue creation failed ! The message must be of the format : "issuize to repo X | issue title | issue body"`).catch(console.error);
+                return;
+            }
+            let repoName = msg.content.split("issuize to repo")[1].split("|")[0].trim();
+            let githubIssueTitle = msg.content.split("|")[1].trim();
+            let githubIssueBody = msg.content.split("|")[2].trim();
+            if(!repoName || repoName.length === 0 ) {
+                console.log(`Github issue creation failed ! Repo Name is empty or null or undefined`);
+                msg.reply(`Github issue creation failed ! Repo Name is empty or null or undefined`).catch(console.error);
+                return;
             }
             else {
-                // its a reply, fetch the parent message denoting the issue
-                client.channels.fetch(msg.channel.id).then(channel => {
-                    let parentMessageId = msg.reference.messageID;
-                    channel.messages.fetch(parentMessageId).then(message => {
-                        let parentIssueMessage = message.content;
-                        let githubIssueTitle = parentIssueMessage.split("|")[0].trim();
-                        let githubIssueBody = parentIssueMessage.split("|")[1].trim();
-                        console.log(`The issue title to post to Github is : ${githubIssueTitle}`);
-                        let repoName = msg.content.split("issuize to repo")[1].trim();
-                        if(!repoName || repoName.length === 0 ) {
-                            console.log(`Github issue creation failed ! Repo Name is empty or null or undefined`);
-                            msg.reply(`Github issue creation failed ! Repo Name is empty or null or undefined`).catch(console.error);
-                        }
-                        else {
-                            // check if repo name is valid according to gihub's naming conventions
-                            if(repoName.match(/^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i)) {
-                                console.log(`Repo Name is : ${repoName}`);
-                                let repoOwner = API_KEYS.GITHUB_REPO_OWNER_USERNAME;
-                                octokit.rest.issues.create({
-                                    owner: repoOwner,
-                                    repo: repoName,
-                                    title: githubIssueTitle,
-                                    body: githubIssueBody
-                                  }).then(() => {
-                                    msg.reply('Github issue creation succeded !').catch(console.error);
-                                  }).catch(err => console.error(err))
-                            }
-                            else {
-                                console.log(`Github issue creation failed ! Repo Name is not valid !`);
-                                msg.reply('Github issue creation failed ! Repo Name is not valid !').catch(console.error);
-                            }
-                        }
-                    }).catch(console.error);
-                }).catch(console.error);
+                // check if repo name is valid according to gihub's naming conventions
+                if(repoName.match(/^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i)) {
+                    console.log(`Repo Name is : ${repoName}`);
+                    let repoOwner = API_KEYS.GITHUB_REPO_OWNER_USERNAME;
+                    octokit.rest.issues.create({
+                        owner: repoOwner,
+                        repo: repoName,
+                        title: githubIssueTitle,
+                        body: githubIssueBody
+                        }).then(() => {
+                        msg.reply('Github issue creation succeded !').catch(console.error);
+                        }).catch(err => console.error(err))
+                }
+                else {
+                    console.log(`Github issue creation failed ! Repo Name is not valid !`);
+                    msg.reply('Github issue creation failed ! Repo Name is not valid !').catch(console.error);
+                    return;
+                }
             }
         }
 
     } catch (error) {
-        console.error("Encountered error !", error)
+        console.error("Encountered error !", error);
+        msg.reply(`Github issue creation failed ! Encountered an error : ${error}`).catch(console.error);
     }
 });
 
