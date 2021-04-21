@@ -4,7 +4,15 @@ For Gitcoin's hackathon https://gitcoin.co/issue/MetaFam/fix-the-world/2/1000254
 
 Example format for issue message : `issuize to repo MetaFam-discord-message-to-github-issue | issue related to something (title) | content of the issue (body)`
 
-![Working Example](./example.png?raw=true "Working Example")
+![Issue Creation Example](./issueCreation.png?raw=true "Issue Creation Example")
+
+# Pull Request Bot
+
+This bot creates a pull request in https://github.com/MetaFam/metagame-wiki master branch and adds an image in static/img folder. This bot will listen for messages on all the channels of a user and if any message has an image as an attachment and a comment of the kind "create pr", then it will create a branch "imageBranch" if it is not already created for https://github.com/MetaFam/metagame-wiki repo and then it'll commit the atttached image to the imageBranch repo and then create a pull request to the master branch of MetaGame's documentation and will reply to the user's message telling him that it has succeeded.
+
+Example format for pull request attachment : `create pr`
+
+![Pull Request Example](./prCreation.png?raw=true "Pull Request Example")
 
 # Obtaining access tokens and adding them to keys.js
 
